@@ -1,0 +1,127 @@
+.b-start-screen {
+    display: flex;
+    justify-content: center;
+}
+
+.b-start-screen__window {
+    margin-top: 1em;
+}
+
+.b-start-screen__btn {
+
+}
+
+.b-btn {
+    cursor: pointer;
+    color: var(--default-title-color);
+    background-image: linear-gradient(#eee, #dcdcdc, #c1c1c1);
+    -webkit-transition: all 0.25s;
+    -moz-transition: all 0.25s;
+    -ms-transition: all 0.25s;
+    -o-transition: all 0.25s;
+    transition: all 0.25s;
+}
+
+.b-btn:hover {
+    background-image: linear-gradient(#c1c1c1, #dcdcdc, #eee);
+    text-decoration: none;
+    color: var(--default-title-color);
+}
+
+.b-btn_big {
+    font-size: 5em;
+    border-radius: 15px;
+    padding: 0 25px;
+}
+
+.b-ajax-window {
+    position: relative;
+    --default-title-color: #9e9898;
+    --danger-bg: #ff06064a;
+    --danger-color: #ca0000c7;
+    --success-bg: #00800075;
+    --success-color: #026702;
+}
+
+.b-card {
+    --width: 400px;
+    width: var(--width);
+    height: 240px;
+    position: absolute;
+    top: 0;
+    left: calc(var(--width) / -2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #868585;
+    background-image: linear-gradient(#eee, #dcdcdc, #c1c1c1);
+    padding: 25px;
+    border-radius: 15px;
+}
+
+.b-card__title {
+    font-size: 1.5em;
+    color: var(--default-title-color);
+    width: 80%;
+    padding: 5px 0 5px 0;
+    position: absolute;
+    top: 30px;
+    text-align: center;
+    border-radius: 5px;
+    background: #fbfbfb;
+}
+
+.b-card_question-side .b-card__title{
+    background: var(--danger-bg);
+    color: var(--danger-color);
+    font-weight: 700;
+    font-size: 2em;
+    padding: 2px 0 2px 0;
+}
+
+.b-card_answer-side .b-card__title{
+    background: var(--success-bg);
+    color: var(--success-color);
+    font-weight: 700;
+    font-size: 2em;
+    padding: 2px 0 2px 0;
+}
+
+.b-card__text {
+    font-size: 1em;
+}
+
+.b-card_question-side {
+
+}
+
+.b-card_answer-side {
+    transform: rotateY(180deg);
+}
+
+.b-card_question-side, .b-card_answer-side {
+    backface-visibility: hidden;
+}
+
+.b-card_hide {
+    animation: card-rotate 1s linear 0s 1 normal forwards;
+}
+
+.b-card_show {
+    animation: card-rotate 1s linear 0s 1 reverse forwards;
+}
+
+.b-card_next {
+    transform: rotateY(0deg);
+    animation: bounceOutLeft 1s linear 0s 1 normal both; /*keyframe from animate.css*/
+}
+
+@keyframes card-rotate {
+    from {
+        transform: rotateY(0);
+    }
+    to {
+        transform: rotateY(180deg);
+    }
+}
