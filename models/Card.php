@@ -23,18 +23,9 @@ use yii\helpers\ArrayHelper;
  */
 class Card extends ActiveRecord
 {
-  public $formName = 'CardForm';
-
   public static function tableName()
   {
     return '{{%flash_card}}';
-  }
-
-  public function formName($newFormName = null)
-  {
-    if($newFormName) $this->formName = $newFormName;
-
-    return $this->formName;
   }
 
   public function behaviors()
@@ -67,13 +58,14 @@ class Card extends ActiveRecord
    * Fills model parameters
    *
    * @param array $attributes
+   * @param bool $validate
    * @param bool $save
    * @return bool
    */
-  public function fill(array $attributes, $save = true): bool
+  public function fill(array $attributes, $validate = true, $save = true): bool
   {
     if ($this->load($attributes, '')) {
-      if (($save && $this->save()) || (!$save && $this->validate())) {
+      if (($save && $this->save($validate)) || (!$save && $validate ? $this->validate() : true)) {
         return true;
       }
     }
@@ -94,5 +86,26 @@ class Card extends ActiveRecord
     }
 
     return $ids;
+  }
+
+  public static function prepareMultiple(array $data, array $existingCards = [], $oldIds = null): array
+  {
+    $answer = [];
+
+    if ($data) {
+      $cards = Card::createMultiple(static::class, $existingCards);
+
+      if($existingCards){
+        $oldIds = ArrayHelper::map($existingCards, 'id', 'id');
+      }
+
+      if (Card::loadMultiple($cards, $data) && Card::validateMultiple($cards)) {
+        $newIds = ArrayHelper::map($cards, 'id', 'id');
+        $answer['deletedIds'] = array_diff($oldIds, $newIds);
+        $answer['cards'] = $cards;
+      }
+    }
+
+    return $answer;
   }
 }

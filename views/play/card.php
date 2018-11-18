@@ -8,6 +8,11 @@ use yii\helpers\Url;
  * @var $cardInfo array
  */
 
+/** todo:
+ * parse json formatted array with question, answer and currentCardId
+ * set question and answer to needed places
+ */
+
 $this->registerJs("
 
     function getAnswer()

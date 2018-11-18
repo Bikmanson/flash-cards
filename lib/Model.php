@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 
 class Model extends \yii\base\Model
 {
-  public static function createMultiple($modelClass, $multipleModels = [])
+  public static function createMultiple($modelClass, $multipleModels = [], $id = 'id')
   {
     $model = new $modelClass;
     /**
@@ -24,14 +24,14 @@ class Model extends \yii\base\Model
     $models = [];
 
     if (!empty($multipleModels)) {
-      $keys = array_keys(ArrayHelper::map($multipleModels, 'id', 'id'));
+      $keys = array_keys(ArrayHelper::map($multipleModels, $id, $id));
       $multipleModels = array_combine($keys, $multipleModels);
     }
 
     if ($post && is_array($post)) {
       foreach ($post as $i => $item) {
-        if (isset($item['id']) && !empty($item['id']) && isset($multipleModels[$item['id']])) {
-          $models[] = $multipleModels[$item['id']];
+        if (isset($item[$id]) && !empty($item[$id]) && isset($multipleModels[$item[$id]])) {
+          $models[] = $multipleModels[$item[$id]];
         } else {
           $models[] = new $modelClass;
         }

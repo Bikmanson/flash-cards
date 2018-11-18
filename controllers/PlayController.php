@@ -17,12 +17,6 @@ class PlayController extends Controller
 {
   public function actionIndex(bool $restart = false)
   {
-    if ($restart === true) {
-      return $this->renderAjax('index', [
-        'restart' => $restart
-      ]);
-    }
-
     return $this->render('index', [
       'restart' => $restart
     ]);
@@ -47,9 +41,6 @@ class PlayController extends Controller
       'answer' => $answer,
       'currentCardId' => $nextCardId
     ];
-    /** todo:
-     * watch how to send json format by ajax
-     */
 
     return $this->renderAjax('card', [
       'cardInfo' => $cardInfo

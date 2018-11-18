@@ -8,6 +8,7 @@ use Yii;
 use app\models\Card;
 use app\models\CardSearch;
 use yii\db\Exception;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -28,13 +29,6 @@ class CardController extends Controller
           'delete' => ['POST'],
         ],
       ],
-//      'newNames' => [ // todo: doesn't work - todo list inside
-//        'class' => ActionRenameBehavior::class,
-//        'newNamesArr' => [
-//          'create' => 'new',
-//          'update' => 'edit',
-//        ]
-//      ]
     ];
   }
 
@@ -73,36 +67,34 @@ class CardController extends Controller
    */
   public function actionNew()
   {
-    $cardForms = [new CardForm];
+    $cards = [new Card];
 
     if ($post = Yii::$app->request->post()) {
       $cards = Card::createMultiple(Card::class);
+      Card::loadMultiple($cards, $post);
 
-      if (Card::loadMultiple($cards, $post) && Card::validateMultiple($cards)) {
+      if (Card::validateMultiple($cards)) {
         $transaction = Yii::$app->db->beginTransaction();
-
         try {
           foreach ($cards as $card) {
-            /**
-             * @var $card Card
-             */
-            if (!$card->save()) {
-              $transaction->rollBack();
-              break;
+            /** @var $card Card */
+            if (!$card->save(false)) {
+              throw new Exception('Cards were not saved! Something went wrong');
             }
           }
+          $transaction->commit();
+          Yii::$app->session->setFlash('success', 'Cards are saved!');
+
+          return $this->redirect(['edit']);
         } catch (Exception $exception) {
           $transaction->rollBack();
+          Yii::$app->session->setFlash('danger', $exception->getMessage());
         }
-
-        $transaction->commit();
-        Yii::$app->session->setFlash('success', 'The cards are created successfully!');
-        return $this->redirect('edit');
       }
     }
 
     return $this->render('new', [
-      'cardForms' => $cardForms
+      'cards' => $cards
     ]);
   }
 
@@ -111,32 +103,31 @@ class CardController extends Controller
    * If update is successful, the browser will be redirected to the 'view' page.
    * @param integer $id
    * @return mixed
-   * @throws NotFoundHttpException if the model cannot be found
    */
-  public function actionEdit($id)
+  public function actionEdit($id = null)
   {
-    /**todo:
-     * ***edit one***
-     * if $_POST has CardForm
-     * createMultiple
-     * loadMultiple
-     * save every object by foreach with transaction
-     */
+    $cards = Card::find()->all();
 
-    $card = $this->findModel($id);
-    $form = new CardForm($card);
+    if ($post = Yii::$app->request->post()) {
+      $preparation = Card::prepareMultiple($post, $cards);
+      if ($this->saveMultiple($preparation)) {
+        Yii::$app->session->setFlash('success', 'The cards are created successfully!');
+      } else {
+        Yii::$app->session->setFlash('danger', 'Something went wrong.');
+      }
+    }
 
+    if ($id) {
+      return $this->render('edit', [
+        'cards' => [Card::findOne(['id' => $id])]
+      ]);
+    } elseif (empty($cards = Card::find()->all())) {
+      return $this->redirect('new');
+    }
 
-
-//    if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-//      if ($card->fill($form->attributes)) {
-//        return $this->render('view', ['model' => $card]);
-//      }
-//    }
-//
-//    return $this->render('edit', [
-//      'cardForm' => $form,
-//    ]);
+    return $this->render('edit', [
+      'cards' => $cards
+    ]);
   }
 
   /**
@@ -168,4 +159,28 @@ class CardController extends Controller
 
     throw new NotFoundHttpException('The requested page does not exist.');
   }
+
+  /**
+   * @param array $preparation
+   * @return bool
+   */
+  private function saveMultiple(array $preparation): bool
+  {
+    $answer = true;
+    $transaction = Yii::$app->db->beginTransaction();
+    Card::deleteAll(['id' => $preparation['deletedIds']]);
+
+    foreach ($preparation['cards'] as $card) {
+      /** @var $card Card */
+      if (!$card->save()) {
+        $transaction->rollBack();
+        $answer = false;
+        break;
+      }
+    }
+    $transaction->commit();
+
+    return $answer;
+  }
+
 }

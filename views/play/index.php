@@ -29,9 +29,9 @@ $(document).ready(function(){
 
     <div id="response" class="b-ajax-window b-start-screen__window">
 
-      <?php if ($restart === false): ?>
+      <?php if (!$restart): ?>
           <div id="start" class="b-btn b-btn_big b-start-screen__btn">Start</div>
-      <?php elseif($restart === true): ?>
+      <?php elseif($restart): ?>
           <div id="start" class="b-btn b-btn_big b-start-screen__btn">Restart</div>
       <?php endif; ?>
 
