@@ -28,7 +28,7 @@ class PlayController extends Controller
     if ($currentCardId) {
       $nextCardId = $this->getNextElementOfArray($allCardIds, $currentCardId);
       if (!$nextCardId) {
-        return $this->actionIndex(true);
+        return $this->redirect(['index', 'restart' => true]);
       }
     } else {
       $nextCardId = $allCardIds[0];

@@ -1,0 +1,45 @@
+read about hashing of password
+    what type in db
+    how to hash it in model
+    how to realize validatePassword function
+
+create migration create_user_table
+    'id'
+    'username'
+    'password' - hashed
+    'authKey'
+
+create class Player extends ActiveRecord implements IdentityInterface
+    public id
+    public username
+    public password
+    public authKey
+
+realize interfaces methods in class Player (password has to be hashed)
+
+realize in class Player methods needed for LoginForm
+
+create actionSignUp in SiteController (using LoginForm if it fits)
+
+change user component class to Player in config
+
+__________________________DONE__________________________
+
+add button sign up to header of start view
+
+realize the access to card of play actions only for logined players
+
+create migration add_player_username_column_card_table
+
+add attribute playerUser to Card model
+
+in new card form add activeHiddenInput with username
+
+edit actions in CardController (maybe with new todo_list)
+    new
+    edit
+    (maybe other)
+
+edit actions in PlayController (maybe with new todo_list)
+
+look at the result, debug and refactor farther :)

@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
   ]); ?>
 
     <?php
-    ($edit) ? $limit = 1 : $limit = 999; //dynamic form widget bug fix 
+    ($edit) ? $limit = 1 : $limit = 999; //dynamic form widget bug fix
     ?>
     <?php DynamicFormWidget::begin([
       'widgetContainer' => 'cardsDynamicForm_wrapper',
