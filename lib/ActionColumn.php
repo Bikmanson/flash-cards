@@ -9,7 +9,7 @@
 namespace app\lib;
 
 
-class CardActionColumn extends \yii\grid\ActionColumn
+class ActionColumn extends \yii\grid\ActionColumn
 {
 
 }

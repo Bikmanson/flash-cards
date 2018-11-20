@@ -1,0 +1,61 @@
+.b-cards {
+
+}
+
+.b-card-form__cards {
+
+}
+
+.b-cards__item {
+    width: 50%;
+    margin-bottom: 30px;
+}
+
+.b-cards__item-label {
+    padding: 3px 8px;
+    border-radius: 15px;
+}
+
+.b-cards__item-label_question {
+    background: var(--danger-bg);
+    color: var(--danger-color);
+}
+
+.b-cards__item-label_answer {
+    background: var(--success-bg);
+    color: var(--success-color);
+}
+
+.b-cards__item-text {
+    width: 100%;
+    display: block;
+    padding: 5px;
+}
+
+.b-cards__item-btns {
+    display: flex;
+    margin: 10px 0;
+    color: white;
+    justify-content: flex-end;
+}
+
+.b-cards__item-btn {
+    width: 80px;
+    text-align: center;
+    font-size: 1.5em;
+    line-height: 1em;
+    margin: 0 2px;
+    border-radius: 15px;
+}
+
+.b-cards__item-btn_add {
+
+}
+
+.b-cards__item-btn_delete {
+
+}
+
+.b-cards__item-hr{
+
+}

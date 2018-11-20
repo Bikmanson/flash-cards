@@ -18,6 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
       <?= Html::a('New Card', ['new'], ['class' => 'btn btn-success']) ?>
+      <?= Html::a('Edit', ['edit'], ['class' => 'btn btn-info']) ?>
     </p>
 
   <?= GridView::widget([
@@ -30,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
       'answer:ntext',
 
       [
-        'class' => 'app\lib\CardActionColumn',
+        'class' => 'app\lib\ActionColumn',
         'urlCreator' => function ($action, $model, $key, $index) {
           if ($action === 'view') {
             return Url::to(['view', 'id' => $model->id]);

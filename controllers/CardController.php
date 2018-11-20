@@ -55,9 +55,14 @@ class CardController extends Controller
    */
   public function actionView($id)
   {
-    return $this->render('view', [
-      'model' => $this->findModel($id),
-    ]);
+    $model = $this->findModel($id);
+    if ($model->player_id === Yii::$app->user->identity->getId()) {
+      return $this->render('view', [
+        'model' => $model,
+      ]);
+    }
+
+    return $this->redirect('index');
   }
 
   /**
@@ -106,11 +111,13 @@ class CardController extends Controller
    */
   public function actionEdit($id = null)
   {
-    $cards = Card::find()->all();
+    $playerId = Yii::$app->user->identity->getId();
+    $cards = Card::find()->where(['player_id' => $playerId])->all();
 
     if ($post = Yii::$app->request->post()) {
       $preparation = Card::prepareMultiple($post, $cards);
       if ($this->saveMultiple($preparation)) {
+        $cards = Card::find()->where(['player_id' => $playerId])->all(); // reassigning for farther rendering new list of cards
         Yii::$app->session->setFlash('success', 'The cards are created successfully!');
       } else {
         Yii::$app->session->setFlash('danger', 'Something went wrong.');
@@ -118,10 +125,13 @@ class CardController extends Controller
     }
 
     if ($id) {
-      return $this->render('edit', [
-        'cards' => [Card::findOne(['id' => $id])]
-      ]);
-    } elseif (empty($cards = Card::find()->all())) {
+      if (Card::findOne(['id' => $id])->player_id === $playerId) {
+        return $this->render('edit', [
+          'cards' => [Card::findOne(['id' => $id])]
+        ]);
+      }
+      return $this->redirect('index');
+    } elseif (empty($cards)) {
       return $this->redirect('new');
     }
 

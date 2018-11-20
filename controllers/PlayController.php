@@ -22,7 +22,7 @@ class PlayController extends Controller
     ]);
   }
 
-  public function actionNextCard($currentCardId = null) //todo: receive parameter $cardId
+  public function actionNextCard($currentCardId = null)
   {
     $allCardIds = Card::getAllCardIds();
     if ($currentCardId) {

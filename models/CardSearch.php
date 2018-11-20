@@ -41,7 +41,7 @@ class CardSearch extends Card
      */
     public function search($params)
     {
-        $query = Card::find();
+        $query = Card::find()->where(['player_id' => Yii::$app->user->identity->getId()]);
 
         // add conditions that should always apply here
 

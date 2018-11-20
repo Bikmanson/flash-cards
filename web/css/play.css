@@ -36,11 +36,6 @@
 
 .b-ajax-window {
     position: relative;
-    --default-title-color: #9e9898;
-    --danger-bg: #ff06064a;
-    --danger-color: #a51010;
-    --success-bg: #00800075;
-    --success-color: #026702;
 }
 
 .b-card {

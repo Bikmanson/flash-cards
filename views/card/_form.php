@@ -9,6 +9,8 @@ use yii\widgets\ActiveForm;
 
 /* @var $cards array of objects */
 /* @var $edit bool|null dynamic form widget bug fix */
+
+\app\assets\CardAsset::register($this);
 ?>
 
 <div class="card-form">
@@ -17,48 +19,55 @@ use yii\widgets\ActiveForm;
     'id' => 'newCard'
   ]); ?>
 
-    <?php
-    ($edit) ? $limit = 1 : $limit = 999; //dynamic form widget bug fix
-    ?>
-    <?php DynamicFormWidget::begin([
-      'widgetContainer' => 'cardsDynamicForm_wrapper',
-      'widgetBody' => '.b-cards',
-      'widgetItem' => '.b-cards__item',
-      'min' => 1,
-      'limit' => $limit,
-      'insertButton' => '.b-cards__item-btn_add',
-      'deleteButton' => '.b-cards__item-btn_delete',
-      'model' => $cards[0],
-      'formId' => 'newCard',
-      'formFields' => [
-        'question',
-        'answer'
-      ]
-    ]) ?>
+  <?php
+  ($edit) ? $limit = 1 : $limit = 999; //dynamic form widget bug fix
+  ?>
+  <?php DynamicFormWidget::begin([
+    'widgetContainer' => 'cardsDynamicForm_wrapper',
+    'widgetBody' => '.b-cards',
+    'widgetItem' => '.b-cards__item',
+    'min' => 1,
+    'limit' => $limit,
+    'insertButton' => '.b-cards__item-btn_add',
+    'deleteButton' => '.b-cards__item-btn_delete',
+    'model' => $cards[0],
+    'formId' => 'newCard',
+    'formFields' => [
+      'question',
+      'answer',
+      'player_id'
+    ]
+  ]) ?>
 
-    <?php foreach ($cards as $index => $card): ?>
+  <?php foreach ($cards as $index => $card): ?>
 
-          <div class="b-cards b-card-form__cards">
-              <div class="b-cards__item">
-                <?php
-                /** @var $card \app\models\Card */
-                if (!$card->isNewRecord) {
-                  echo Html::activeHiddenInput($card, "[{$index}]id");
-                }
-                ?>
+      <div class="b-cards b-card-form__cards">
+          <div class="b-cards__item">
 
-                <?= $form->field($card, "[{$index}]question")->textInput(['class' => 'b-cards__item-input']) ?>
-                <?= $form->field($card, "[{$index}]answer")->textInput(['class' => 'b-cards__item-input']) ?>
-                  <div class="b-cards__item-btns">
-                      <div class="b-cards__item-btn_add">+</div>
-                      <div class="b-cards__item-btn_delete">-</div>
-                  </div>
+            <?php
+            /** @var $card \app\models\Card */
+            if (!$card->isNewRecord) {
+              echo Html::activeHiddenInput($card, "[{$index}]id");
+            }
+            ?>
+
+            <?= $form->field($card, "[{$index}]question")->textarea(['class' => 'b-cards__item-text', 'rows' => 5])
+              ->label($card->getAttributeLabel('question'), ['class' => 'b-cards__item-label b-cards__item-label_question']) ?>
+
+            <?= $form->field($card, "[{$index}]answer")->textarea(['class' => 'b-cards__item-text', 'rows' => 5]
+            )->label($card->getAttributeLabel('answer'), ['class' => 'b-cards__item-label b-cards__item-label_answer']) ?>
+
+              <div class="b-cards__item-btns">
+                  <div class="b-cards__item-btn b-cards__item-btn_add btn btn-success">+</div>
+                  <div class="b-cards__item-btn b-cards__item-btn_delete btn btn-danger">-</div>
               </div>
+              <hr class="b-cards__item-hr">
           </div>
+      </div>
 
-    <?php endforeach ?>
+  <?php endforeach ?>
 
-    <?php DynamicFormWidget::end() ?>
+  <?php DynamicFormWidget::end() ?>
 
     <div class="form-group">
       <?php

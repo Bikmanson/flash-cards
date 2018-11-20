@@ -20,9 +20,16 @@ use yii\helpers\ArrayHelper;
  * @property integer $id
  * @property string $question
  * @property string $answer
+ * @property string $player_id
  */
 class Card extends ActiveRecord
 {
+  public function __construct(array $config = [])
+  {
+    $this->player_id = Yii::$app->user->identity->getId();
+    parent::__construct($config);
+  }
+
   public static function tableName()
   {
     return '{{%flash_card}}';
@@ -40,8 +47,9 @@ class Card extends ActiveRecord
   public function rules()
   {
     return [
-      [['question', 'answer'], 'required'],
+      [['question', 'answer', 'player_id'], 'required'],
       [['question', 'answer'], 'string', 'max' => 255],
+      ['player_id', 'integer', 'max' => 11],
       [['created_at', 'updated_at'], 'integer']
     ];
   }
@@ -77,7 +85,7 @@ class Card extends ActiveRecord
    */
   public static function getAllCardIds(): array
   {
-    $allCards = static::find()->all();
+    $allCards = static::find()->where(['player_id' => Yii::$app->user->identity->getId()])->all();
     $ids = [];
 
     foreach ($allCards as $card) {
@@ -95,7 +103,7 @@ class Card extends ActiveRecord
     if ($data) {
       $cards = Card::createMultiple(static::class, $existingCards);
 
-      if($existingCards){
+      if ($existingCards) {
         $oldIds = ArrayHelper::map($existingCards, 'id', 'id');
       }
 
@@ -107,5 +115,10 @@ class Card extends ActiveRecord
     }
 
     return $answer;
+  }
+
+  public function getPlayer()
+  {
+    return $this->hasOne(Player::class, ['id' => 'player_id']);
   }
 }
