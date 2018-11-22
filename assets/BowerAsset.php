@@ -13,9 +13,14 @@ use app\lib\AssetBundle;
 
 class BowerAsset extends AssetBundle
 {
-  public $sourcePath = '@bower/animate.css';
+  public $sourcePath = '@bower';
 
   public $css = [
-    'animate.css',
+    'animate.css/animate.css',
+    'multiselect\css\multi-select.css'
+  ];
+
+  public $js = [
+    'multiselect\js\jquery.multi-select.js'
   ];
 }

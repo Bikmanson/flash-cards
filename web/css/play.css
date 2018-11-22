@@ -1,6 +1,5 @@
 .b-start-screen {
-    display: flex;
-    justify-content: center;
+
 }
 
 .b-start-screen__window {
@@ -35,10 +34,15 @@
 }
 
 .b-ajax-window {
+    display: flex;
+    justify-content: center;
+}
+
+.b-card{
     position: relative;
 }
 
-.b-card {
+.b-card__side {
     --width: 400px;
     width: var(--width);
     height: 240px;
@@ -50,12 +54,13 @@
     align-items: center;
     justify-content: center;
     color: #868585;
-    background-image: linear-gradient(#eee, #dcdcdc, #c1c1c1);
     padding: 25px;
     border-radius: 15px;
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, .2);
+    background: #262626;
 }
 
-.b-card__title {
+.b-card__side__title {
     font-size: 1.5em;
     color: var(--default-title-color);
     width: 80%;
@@ -67,47 +72,50 @@
     background: #fbfbfb;
 }
 
-.b-card_question-side .b-card__title{
-    background: var(--danger-bg);
-    color: var(--danger-color);
+.b-card__side_question .b-card__side__title{
     font-weight: 700;
     font-size: 2em;
     padding: 2px 0 2px 0;
+    background: #e53935;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.b-card_answer-side .b-card__title{
-    background: var(--success-bg);
-    color: var(--success-color);
+.b-card__side_answer .b-card__side__title{
     font-weight: 700;
     font-size: 2em;
     padding: 2px 0 2px 0;
+    background: #00796b;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.b-card__text {
+.b-card__side__text {
     font-size: 1em;
+    color: white;
 }
 
-.b-card_question-side {
+.b-card__side_question {
 
 }
 
-.b-card_answer-side {
+.b-card__side_answer {
     transform: rotateY(180deg);
 }
 
-.b-card_question-side, .b-card_answer-side {
+.b-card__side_question, .b-card__side_answer {
     backface-visibility: hidden;
 }
 
-.b-card_hide {
+.b-card__side_hide {
     animation: card-rotate 1s linear 0s 1 normal forwards;
 }
 
-.b-card_show {
+.b-card__side_show {
     animation: card-rotate 1s linear 0s 1 reverse forwards;
 }
 
-.b-card_next {
+.b-card__side_next {
     transform: rotateY(0deg);
     animation: bounceOutLeft 1s linear 0s 1 normal both; /*keyframe from animate.css*/
 }

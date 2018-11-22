@@ -10,9 +10,12 @@ namespace app\models;
 
 
 use app\lib\ActiveRecord;
+use app\services\CardService;
+use app\services\PackageService;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 
 /**
  * Class Card
@@ -21,6 +24,7 @@ use yii\helpers\ArrayHelper;
  * @property string $question
  * @property string $answer
  * @property string $player_id
+ * @property string $package_id
  */
 class Card extends ActiveRecord
 {
@@ -49,6 +53,7 @@ class Card extends ActiveRecord
     return [
       [['question', 'answer', 'player_id'], 'required'],
       [['question', 'answer'], 'string', 'max' => 255],
+      ['package_id', 'integer', 'max' => 11],
       ['player_id', 'integer', 'max' => 11],
       [['created_at', 'updated_at'], 'integer']
     ];
@@ -63,29 +68,19 @@ class Card extends ActiveRecord
   }
 
   /**
-   * Fills model parameters
-   *
-   * @param array $attributes
-   * @param bool $validate
-   * @param bool $save
-   * @return bool
-   */
-  public function fill(array $attributes, $validate = true, $save = true): bool
-  {
-    if ($this->load($attributes, '')) {
-      if (($save && $this->save($validate)) || (!$save && $validate ? $this->validate() : true)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
+   * @param array $packageIds
    * @return array
+   * @throws BadRequestHttpException
    */
-  public static function getAllCardIds(): array
+  public static function getAllCardIds(array $packageIds = []): array
   {
-    $allCards = static::find()->where(['player_id' => Yii::$app->user->identity->getId()])->all();
+    $allCards = [];
+
+    if (empty($packageIds)) {
+      $allCards = CardService::getCards();
+    } else {
+      $allCards = CardService::getCards($packageIds);
+    }
     $ids = [];
 
     foreach ($allCards as $card) {

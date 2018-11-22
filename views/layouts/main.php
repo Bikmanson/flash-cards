@@ -46,8 +46,9 @@ AppAsset::register($this);
   ];
 
   $userNav = [
+    ['label' => 'Play', 'url' => ['/play/start']],
     ['label' => 'Cards', 'url' => ['/card/index']],
-    ['label' => 'Play', 'url' => ['/play/index']],
+    ['label' => 'Packages', 'url' => ['/package/index']],
     ['label' => 'About', 'url' => ['/site/about']],
     ['label' => 'Contact', 'url' => ['/site/contact']],
     '<li>'

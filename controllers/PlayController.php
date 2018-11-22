@@ -11,35 +11,53 @@ namespace app\controllers;
 
 use app\lib\Controller;
 use app\models\Card;
+use Yii;
 use yii\helpers\Json;
 
 class PlayController extends Controller
 {
-  public function actionIndex(bool $restart = false)
+  public function actionGo(bool $restart = false, bool $noCards = false)
   {
-    return $this->render('index', [
+    if ($noCards) {
+      Yii::$app->session->setFlash('no card', 'You have not cards');
+    }
+    return $this->render('go', [
       'restart' => $restart
     ]);
   }
 
-  public function actionNextCard($currentCardId = null)
+  public function actionStart()
   {
-    $allCardIds = Card::getAllCardIds();
+    return $this->render('start');
+  }
+
+  function actionNextCard(string $csIds = '', $currentCardId = null)
+  {
+    $packageIds = [];
+    if ($csIds !== '') {
+      $packageIds = array_map('intval', explode(',', $csIds)); // explode coma separated ids
+    }
+    $allCardIds = Card::getAllCardIds($packageIds);
+
+    if (!$allCardIds) return $this->redirect(['go', 'restart' => false, 'noCards' => true]);
+
     if ($currentCardId) {
       $nextCardId = $this->getNextElementOfArray($allCardIds, $currentCardId);
-      if (!$nextCardId) {
-        return $this->redirect(['index', 'restart' => true]);
-      }
     } else {
       $nextCardId = $allCardIds[0];
     }
-    $nextCard = Card::findOne(['id' => $nextCardId]);
+
+    if (!$nextCard = Card::findOne(['id' => $nextCardId])) {
+      return $this->redirect(['go', 'restart' => true]);
+    }
+
     $question = $nextCard->question;
     $answer = $nextCard->answer;
     $cardInfo = [
       'question' => $question,
       'answer' => $answer,
-      'currentCardId' => $nextCardId
+      'currentCardId' => $nextCardId,
+      'packageIds' => $packageIds
     ];
 
     return $this->renderAjax('card', [
@@ -52,7 +70,8 @@ class PlayController extends Controller
    * @param $currentVal
    * @return mixed
    */
-  private function getNextElementOfArray(array $arr, $currentVal)
+  private
+  function getNextElementOfArray(array $arr, $currentVal)
   {
     $currentIndex = array_search($currentVal, $arr);
     $nextIndex = $currentIndex + 1;

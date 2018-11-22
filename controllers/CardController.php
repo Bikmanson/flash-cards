@@ -9,6 +9,7 @@ use app\models\Card;
 use app\models\CardSearch;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -152,6 +153,23 @@ class CardController extends Controller
     $this->findModel($id)->delete();
 
     return $this->redirect(['index']);
+  }
+
+  public function actionMassDelete()
+  {
+    if (!Yii::$app->request->isAjax) {
+      throw new BadRequestHttpException('Only ajax!');
+    }
+
+    $ids = Yii::$app->request->post('ids');
+
+    if($ids && is_array($ids)){
+      foreach ($ids as $id) {
+        Card::findOne(['id' => $id])->delete();
+      }
+    }
+
+    return $this->redirect('index');
   }
 
   /**

@@ -1,6 +1,9 @@
 <?php
 
+use app\models\Package;
+use app\services\PackageService;
 use wbraganca\dynamicform\DynamicFormWidget;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -50,6 +53,8 @@ use yii\widgets\ActiveForm;
               echo Html::activeHiddenInput($card, "[{$index}]id");
             }
             ?>
+
+            <?= $form->field($card, "[{$index}]package_id")->dropDownList(PackageService::getMap()) ?>
 
             <?= $form->field($card, "[{$index}]question")->textarea(['class' => 'b-cards__item-text', 'rows' => 5])
               ->label($card->getAttributeLabel('question'), ['class' => 'b-cards__item-label b-cards__item-label_question']) ?>

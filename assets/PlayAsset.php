@@ -18,13 +18,13 @@ class PlayAsset extends AssetBundle
   public $baseUrl = '@web';
 
   public $css = [
-    'css/play.css',
+    'css/play.css'
   ];
   public $js = [
   ];
   public $depends = [
     'yii\web\YiiAsset',
     'yii\bootstrap\BootstrapAsset',
-    BowerAsset::class,
+    BowerAsset::class
   ];
 }
