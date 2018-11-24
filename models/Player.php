@@ -5,6 +5,8 @@ namespace app\models;
 use app\lib\ActiveRecord;
 use Yii;
 use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -31,6 +33,19 @@ class Player extends ActiveRecord implements IdentityInterface
   {
     return '{{%player}}';
   }
+
+  /**
+   * @return array
+   */
+  public function behaviors()
+  {
+    return ArrayHelper::merge(parent::behaviors(), [
+      'timeStamp' => [
+        'class' => TimestampBehavior::class,
+      ]
+    ]);
+  }
+
 
   /**
    * {@inheritdoc}

@@ -30,7 +30,6 @@ class m181121_095801_change_db_for_card_packages extends Migration
       $this->addForeignKey('fk-package-player', '{{%package}}', 'creator_id', '{{%player}}', 'id', 'NO ACTION');
 
       $this->addColumn('{{%flash_card}}', 'package_id', $this->integer(11));
-      $this->addForeignKey('fk-flash_card-package', '{{%flash_card}}', 'package_id', '{{%package}}', 'id', 'SET NULL');
     }
 
     /**
@@ -38,7 +37,6 @@ class m181121_095801_change_db_for_card_packages extends Migration
      */
     public function safeDown()
     {
-      $this->dropForeignKey('fk-flash_card-package', '{{%flash_card}}');
       $this->dropForeignKey('fk-package-player', '{{%package}}');
       $this->dropColumn('{{%flash_card}}', 'package_id');
       $this->dropTable('{{%package}}');

@@ -2,7 +2,10 @@
 
 namespace app\models;
 
+use app\services\PackageService;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%package}}".
@@ -10,7 +13,6 @@ use Yii;
  * @property int $id
  * @property string $name
  * @property int $creator_id
- * @property int $allowance_id
  * @property int $created_at
  * @property int $updated_at
  *
@@ -19,6 +21,15 @@ use Yii;
  */
 class Package extends \app\lib\ActiveRecord
 {
+  const DEFAULT_PACKAGE_NAME = 'default';
+
+  public function __construct(array $config = [])
+  {
+    $this->creator_id = Yii::$app->user->identity->getId();
+
+    parent::__construct($config);
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -27,13 +38,32 @@ class Package extends \app\lib\ActiveRecord
     return '{{%package}}';
   }
 
+  public function behaviors()
+  {
+    return ArrayHelper::merge(parent::behaviors(), [
+      'timeStamp' => [
+        'class' => TimestampBehavior::class,
+      ]
+    ]);
+  }
+
+  public function afterSave($insert, $changedAttributes)
+  {
+    parent::afterSave($insert, $changedAttributes);
+
+    if (!PackageService::areAllowed([$this->id])) {
+      PackageService::permit($this->creator_id, $this->id); // todo: doesn't work
+    }
+  }
+
   /**
    * {@inheritdoc}
    */
   public function rules()
   {
     return [
-      [['creator_id', 'allowance_id', 'created_at', 'updated_at'], 'integer'],
+      [['creator_id', 'name'], 'required'],
+      [['creator_id', 'created_at', 'updated_at'], 'integer'],
       [['name'], 'string', 'max' => 50],
       [['creator_id'], 'exist', 'skipOnError' => true, 'targetClass' => Player::className(), 'targetAttribute' => ['creator_id' => 'id']],
     ];
@@ -47,8 +77,7 @@ class Package extends \app\lib\ActiveRecord
     return [
       'id' => 'ID',
       'name' => 'Name',
-      'creator_id' => 'Creator ID',
-      'allowance_id' => 'Allowance',
+      'creator_id' => 'Creator',
       'created_at' => 'Created At',
       'updated_at' => 'Updated At',
     ];

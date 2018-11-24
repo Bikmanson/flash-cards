@@ -11,6 +11,7 @@ namespace app\controllers;
 
 use app\lib\Controller;
 use app\models\Card;
+use app\services\CardService;
 use Yii;
 use yii\helpers\Json;
 
@@ -37,7 +38,7 @@ class PlayController extends Controller
     if ($csIds !== '') {
       $packageIds = array_map('intval', explode(',', $csIds)); // explode coma separated ids
     }
-    $allCardIds = Card::getAllCardIds($packageIds);
+    $allCardIds = CardService::getAllCardIds($packageIds);
 
     if (!$allCardIds) return $this->redirect(['go', 'restart' => false, 'noCards' => true]);
 

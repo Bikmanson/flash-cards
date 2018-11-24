@@ -1,6 +1,1 @@
-create form view - form with selecting packages
-play action form come to this form
-
-______________________________DONE______________________________
-
-on submit it comes to play/go - view with game
+permission on created package doesn't generates (modle Package -> function afterSave)

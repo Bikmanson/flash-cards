@@ -23,14 +23,24 @@ use yii\web\BadRequestHttpException;
  * @property integer $id
  * @property string $question
  * @property string $answer
- * @property string $player_id
+ * @property string $creator_id
  * @property string $package_id
+ * @property string $created_at
+ * @property string $updated_at
  */
 class Card extends ActiveRecord
 {
   public function __construct(array $config = [])
   {
-    $this->player_id = Yii::$app->user->identity->getId();
+    $this->creator_id = Yii::$app->user->identity->getId();
+    $this->on(static::EVENT_BEFORE_VALIDATE, function () {
+      if (!$this->package_id) {
+        $this->package_id = Package::findOne([
+          'creator_id' => Yii::$app->user->getId(),
+          'name' => Package::DEFAULT_PACKAGE_NAME
+        ])->id;
+      }
+    });
     parent::__construct($config);
   }
 
@@ -51,10 +61,12 @@ class Card extends ActiveRecord
   public function rules()
   {
     return [
-      [['question', 'answer', 'player_id'], 'required'],
+      [['question', 'answer', 'creator_id', 'package_id'], 'required', 'when' => function () {
+        return true;
+      }, 'whenClient' => 'function(){return false}'],
       [['question', 'answer'], 'string', 'max' => 255],
-      ['package_id', 'integer', 'max' => 11],
-      ['player_id', 'integer', 'max' => 11],
+      ['package_id', 'integer'],
+      ['creator_id', 'integer'],
       [['created_at', 'updated_at'], 'integer']
     ];
   }
@@ -63,32 +75,10 @@ class Card extends ActiveRecord
   {
     return [
       'question' => 'Question',
-      'answer' => 'Answer'
+      'answer' => 'Answer',
+      'creator_id' => 'Author',
+      'package_id' => 'Package'
     ];
-  }
-
-  /**
-   * @param array $packageIds
-   * @return array
-   * @throws BadRequestHttpException
-   */
-  public static function getAllCardIds(array $packageIds = []): array
-  {
-    $allCards = [];
-
-    if (empty($packageIds)) {
-      $allCards = CardService::getCards();
-    } else {
-      $allCards = CardService::getCards($packageIds);
-    }
-    $ids = [];
-
-    foreach ($allCards as $card) {
-      /** @var $card static */
-      $ids [] = $card->id;
-    }
-
-    return $ids;
   }
 
   public static function prepareMultiple(array $data, array $existingCards = [], $oldIds = null): array
@@ -99,21 +89,23 @@ class Card extends ActiveRecord
       $cards = Card::createMultiple(static::class, $existingCards);
 
       if ($existingCards) {
-        $oldIds = ArrayHelper::map($existingCards, 'id', 'id');
+        $answer['oldIds'] = ArrayHelper::map($existingCards, 'id', 'id');
       }
 
-      if (Card::loadMultiple($cards, $data) && Card::validateMultiple($cards)) {
-        $newIds = ArrayHelper::map($cards, 'id', 'id');
-        $answer['deletedIds'] = array_diff($oldIds, $newIds);
-        $answer['cards'] = $cards;
+      if (Card::loadMultiple($cards, $data)) {
+        CardService::defaultPacking($cards);
+
+        if (Card::validateMultiple($cards)) {
+          $answer['cards'] = $cards;
+        }
       }
     }
 
-    return $answer;
+    return $answer; // ['oldIds' => [...], 'cards' => [...]]
   }
 
-  public function getPlayer()
+  public function getCreator()
   {
-    return $this->hasOne(Player::class, ['id' => 'player_id']);
+    return $this->hasOne(Player::class, ['id' => 'creator_id']);
   }
 }

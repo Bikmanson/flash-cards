@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\forms\CardForm;
 use app\lib\Controller;
+use app\models\Package;
 use Yii;
 use app\models\Card;
 use app\models\CardSearch;
@@ -57,7 +58,7 @@ class CardController extends Controller
   public function actionView($id)
   {
     $model = $this->findModel($id);
-    if ($model->player_id === Yii::$app->user->identity->getId()) {
+    if ($model->creator_id === Yii::$app->user->identity->getId()) {
       return $this->render('view', [
         'model' => $model,
       ]);
@@ -76,26 +77,9 @@ class CardController extends Controller
     $cards = [new Card];
 
     if ($post = Yii::$app->request->post()) {
-      $cards = Card::createMultiple(Card::class);
-      Card::loadMultiple($cards, $post);
-
-      if (Card::validateMultiple($cards)) {
-        $transaction = Yii::$app->db->beginTransaction();
-        try {
-          foreach ($cards as $card) {
-            /** @var $card Card */
-            if (!$card->save(false)) {
-              throw new Exception('Cards were not saved! Something went wrong');
-            }
-          }
-          $transaction->commit();
-          Yii::$app->session->setFlash('success', 'Cards are saved!');
-
-          return $this->redirect(['edit']);
-        } catch (Exception $exception) {
-          $transaction->rollBack();
-          Yii::$app->session->setFlash('danger', $exception->getMessage());
-        }
+      $preparation = Card::prepareMultiple($post);
+      if ($cards = $preparation['cards'] && $this->saveMultiple($preparation)) {
+        return $this->redirect(['edit']);
       }
     }
 
@@ -113,20 +97,18 @@ class CardController extends Controller
   public function actionEdit($id = null)
   {
     $playerId = Yii::$app->user->identity->getId();
-    $cards = Card::find()->where(['player_id' => $playerId])->all();
+    $cards = Card::find()->where(['creator_id' => $playerId])->all();
 
     if ($post = Yii::$app->request->post()) {
       $preparation = Card::prepareMultiple($post, $cards);
+
       if ($this->saveMultiple($preparation)) {
-        $cards = Card::find()->where(['player_id' => $playerId])->all(); // reassigning for farther rendering new list of cards
-        Yii::$app->session->setFlash('success', 'The cards are created successfully!');
-      } else {
-        Yii::$app->session->setFlash('danger', 'Something went wrong.');
+        $cards = Card::find()->where(['creator_id' => $playerId])->all(); // reassigning for farther rendering new list of cards
       }
     }
 
     if ($id) {
-      if (Card::findOne(['id' => $id])->player_id === $playerId) {
+      if (Card::findOne(['id' => $id])->creator_id === $playerId) {
         return $this->render('edit', [
           'cards' => [Card::findOne(['id' => $id])]
         ]);
@@ -163,7 +145,7 @@ class CardController extends Controller
 
     $ids = Yii::$app->request->post('ids');
 
-    if($ids && is_array($ids)){
+    if ($ids && is_array($ids)) {
       foreach ($ids as $id) {
         Card::findOne(['id' => $id])->delete();
       }
@@ -194,21 +176,26 @@ class CardController extends Controller
    */
   private function saveMultiple(array $preparation): bool
   {
-    $answer = true;
     $transaction = Yii::$app->db->beginTransaction();
-    Card::deleteAll(['id' => $preparation['deletedIds']]);
+
+    if ($preparation['oldIds']) {
+      $newIds = ArrayHelper::map($preparation['cards'], 'id', 'id');
+      $deletedIds = array_diff($preparation['oldIds'], $newIds);
+      Card::deleteAll(['id' => $deletedIds]);
+    }
 
     foreach ($preparation['cards'] as $card) {
       /** @var $card Card */
       if (!$card->save()) {
         $transaction->rollBack();
-        $answer = false;
-        break;
+        Yii::$app->session->setFlash('danger', 'Cards were not saved! Something went wrong');
+        return false;
       }
     }
     $transaction->commit();
+    Yii::$app->session->setFlash('success', 'Cards are saved!');
 
-    return $answer;
+    return true;
   }
 
 }

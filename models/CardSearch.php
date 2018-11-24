@@ -19,7 +19,7 @@ class CardSearch extends Card
   {
     return [
       [['id'], 'integer'],
-      ['package_id', 'integer', 'max' => 11],
+      ['package_id', 'integer'],
       [['question', 'answer'], 'safe']
     ];
   }
@@ -42,7 +42,7 @@ class CardSearch extends Card
    */
   public function search($params)
   {
-    $query = Card::find()->where(['player_id' => Yii::$app->user->identity->getId()]);
+    $query = Card::find()->where(['creator_id' => Yii::$app->user->identity->getId()]);
 
     // add conditions that should always apply here
 
@@ -59,12 +59,11 @@ class CardSearch extends Card
     }
 
     // grid filtering conditions
-    $query->andFilterWhere([
-      'id' => $this->id,
-    ]);
-
-    $query->andFilterWhere(['like', 'question', $this->question])
-      ->andFilterWhere(['like', 'answer', $this->answer]);
+    $query
+      ->andFilterWhere(['id' => $this->id])
+      ->andFilterWhere(['like', 'question', $this->question])
+      ->andFilterWhere(['like', 'answer', $this->answer])
+      ->andFilterWhere(['package_id' => $this->package_id]);
 
     return $dataProvider;
   }

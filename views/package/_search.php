@@ -21,9 +21,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'creator_id') ?>
 
-    <?= $form->field($model, 'allowance_token') ?>
-
-    <?= $form->field($model, 'created_at') ?>
+    <?php //echo $form->field($model, 'created_at') ?>
 
     <?php // echo $form->field($model, 'updated_at') ?>
 

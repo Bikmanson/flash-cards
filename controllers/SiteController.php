@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\forms\SignUpForm;
+use app\models\Package;
 use app\models\Player;
+use Exception;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -93,14 +95,15 @@ class SiteController extends Controller
     $formModel = new SignUpForm();
 
     if ($formModel->load(Yii::$app->request->post()) && $formModel->validate()) {
-      $player = new Player();
-      $player->username = $formModel->username;
+      $player = new Player(['username' => $formModel->username]);
       $player->setPassword($formModel->password);
 
-      if ($player->save()) {
+      if ($player->save()){
+        Yii::$app->session->setFlash('success', 'You are signed up successfully.');
         return $this->redirect('login');
       }
     }
+    Yii::$app->session->setFlash('danger', 'Something went wrong.');
 
     return $this->render('sign-up', [
       'formModel' => $formModel
@@ -146,4 +149,5 @@ class SiteController extends Controller
   public function actionAbout()
   {
     return $this->render('about');
-  }}
+  }
+}

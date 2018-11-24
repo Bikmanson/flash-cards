@@ -52,6 +52,9 @@ $this->registerJs("
       [
         'attribute' => 'package_id',
         'filter' => PackageService::getMap(),
+        'value' => function ($model) {
+          return Package::findOne(['id' => $model->package_id])->name;
+        }
       ],
       'question:ntext',
       'answer:ntext',
