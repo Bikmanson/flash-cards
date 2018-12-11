@@ -15,9 +15,7 @@ $packages = PackageService::getMap();
 
 $this->registerJs("
     $(document).ready(function(){
-       
-       $('#packageIdSelector').multiSelect()
-       
+        $('#packageIdSelector').multiSelect();
     });
 ");
 ?>
@@ -26,7 +24,7 @@ $this->registerJs("
 
     <input type="hidden" name="_csrf" value="<?=Yii::$app->request->getCsrfToken()?>" />
 
-    <label for="packageIdSelector">Select the packages</label>
+    <label for="packageIdSelector"><?= yii::t('app', 'Select the packages') ?></label>
     <select multiple name="packageIds[]" id="packageIdSelector">
       <?php foreach ($packages as $id => $packageName): ?>
 
@@ -35,6 +33,7 @@ $this->registerJs("
       <?php endforeach; ?>
     </select>
 
-    <input type="submit" value="Go">
+    <input type="submit" value="<?= yii::t('app', 'Go') ?>">
+    <i><?= yii::t('app', 'If no packages will be selected, by default all are included') ?>.</i>
 
 </form>

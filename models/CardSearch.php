@@ -18,7 +18,6 @@ class CardSearch extends Card
   public function rules()
   {
     return [
-      [['id'], 'integer'],
       ['package_id', 'integer'],
       [['question', 'answer'], 'safe']
     ];

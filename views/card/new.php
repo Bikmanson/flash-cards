@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $cards app\forms\CardForm */
 
-$this->title = 'Create Card';
+$this->title = yii::t('app', yii::t('app', 'Create Card'));
 $this->params['breadcrumbs'][] = ['label' => 'Cards', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

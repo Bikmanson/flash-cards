@@ -11,7 +11,7 @@ use yii\helpers\Url;
 /* @var $searchModel app\models\CardSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Cards';
+$this->title = yii::t('app', 'Cards');
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->registerJs("
@@ -37,9 +37,9 @@ $this->registerJs("
   <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-      <?= Html::a('New Card', ['new'], ['class' => 'btn btn-success']) ?>
-      <?= Html::a('Edit', ['edit'], ['class' => 'btn btn-info']) ?>
-      <?= Html::button('Delete selected', ['id' => 'massDelete', 'class' => 'btn btn-danger']) ?>
+      <?= Html::a(yii::t('app', 'New Card'), ['new'], ['class' => 'btn btn-success']) ?>
+      <?= Html::a(yii::t('app', 'Edit'), ['edit'], ['class' => 'btn btn-info']) ?>
+      <?= Html::button(yii::t('app', 'Delete selected'), ['id' => 'massDelete', 'class' => 'btn btn-danger']) ?>
     </p>
 
   <?= GridView::widget([
@@ -52,6 +52,11 @@ $this->registerJs("
       [
         'attribute' => 'package_id',
         'filter' => PackageService::getMap(),
+        'filterInputOptions' => [
+          'prompt' => 'Packages...',
+          'class' => 'form-control',
+          'id' => null,
+        ],
         'value' => function ($model) {
           return Package::findOne(['id' => $model->package_id])->name;
         }

@@ -17,7 +17,7 @@ $csIds = $packageIds ? implode(',', $packageIds) : ''; // coma separated ids
 
 $this->registerJs("
 $(document).ready(function(){
-    $('#start, #restart').on('click', function(){
+    $('#start').on('click', function(){
         $.ajax({
               url: '" . Url::to(['next-card', 'csIds' => $csIds]) . "',
               dataType: 'html',
@@ -45,9 +45,10 @@ $(document).ready(function(){
     <div id="response" class="b-ajax-window b-start-screen__window">
 
       <?php if (!$restart): ?>
-          <div id="start" class="b-btn b-btn_big b-start-screen__btn">Start</div>
+          <div id="start" class="b-btn b-btn_big b-start-screen__btn"><?= yii::t('app', 'Start') ?></div>
       <?php elseif ($restart): ?>
-          <div id="restart" class="b-btn b-btn_big b-start-screen__btn">Restart</div>
+          <a href="<?= Url::to(['start']) ?>" id="restart"
+             class="b-btn b-btn_big b-start-screen__btn"><?= yii::t('app', 'Restart') ?></a>
       <?php endif; ?>
 
     </div>

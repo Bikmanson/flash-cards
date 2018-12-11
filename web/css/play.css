@@ -11,6 +11,7 @@
 }
 
 .b-btn {
+    display: block;
     cursor: pointer;
     color: var(--default-title-color);
     background-image: linear-gradient(#eee, #dcdcdc, #c1c1c1);

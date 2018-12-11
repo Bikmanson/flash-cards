@@ -1,1 +1,6 @@
-permission on created package doesn't generates (modle Package -> function afterSave)
+in layout main add lang select
+    use activeForm widget
+    after change some item, to submit form automatic by js
+    create action that will change lang
+
+read about url manager

@@ -36,7 +36,9 @@ class CardService
 
     $cards = [];
     foreach ($packageIds as $packageId) {
-      array_push($cards, Card::find()->where(['package_id' => $packageId])->all());
+      $a = $cards;
+      $b = Card::find()->where(['package_id' => $packageId])->all();
+      $cards = array_merge($cards, $b);
     }
 
     return $cards;

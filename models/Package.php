@@ -23,9 +23,18 @@ class Package extends \app\lib\ActiveRecord
 {
   const DEFAULT_PACKAGE_NAME = 'default';
 
+  const EVENT_AFTER_NEW_INSTANCE = 'afterNewInstance';
+
   public function __construct(array $config = [])
   {
-    $this->creator_id = Yii::$app->user->identity->getId();
+    $this->on(self::EVENT_AFTER_NEW_INSTANCE, function ($event) {
+      $event->sender->creator_id = Yii::$app->user->identity->getId();
+    });
+    $this->on(static::EVENT_AFTER_INSERT, function ($event) {
+      if (!PackageService::areAllowed([$event->sender->id])) {
+        PackageService::permit($event->sender->creator_id, $event->sender->id);
+      }
+    });
 
     parent::__construct($config);
   }
@@ -47,15 +56,6 @@ class Package extends \app\lib\ActiveRecord
     ]);
   }
 
-  public function afterSave($insert, $changedAttributes)
-  {
-    parent::afterSave($insert, $changedAttributes);
-
-    if (!PackageService::areAllowed([$this->id])) {
-      PackageService::permit($this->creator_id, $this->id); // todo: doesn't work
-    }
-  }
-
   /**
    * {@inheritdoc}
    */
@@ -75,11 +75,11 @@ class Package extends \app\lib\ActiveRecord
   public function attributeLabels()
   {
     return [
-      'id' => 'ID',
-      'name' => 'Name',
-      'creator_id' => 'Creator',
-      'created_at' => 'Created At',
-      'updated_at' => 'Updated At',
+      'id' => yii::t('app', 'ID'),
+      'name' => yii::t('app', 'Name'),
+      'creator_id' => yii::t('app', 'Creator'),
+      'created_at' => yii::t('app', 'Created At'),
+      'updated_at' => yii::t('app', 'Updated At'),
     ];
   }
 
@@ -97,5 +97,10 @@ class Package extends \app\lib\ActiveRecord
   public function getCreator()
   {
     return $this->hasOne(Player::className(), ['id' => 'creator_id']);
+  }
+
+  public function afterNewInstance()
+  {
+    $this->trigger(self::EVENT_AFTER_NEW_INSTANCE);
   }
 }

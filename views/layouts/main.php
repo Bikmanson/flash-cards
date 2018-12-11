@@ -5,6 +5,7 @@
 /* @var $content string */
 
 use app\widgets\Alert;
+use modules\lang\widgets\langSwitcher\LangSwitcher;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -39,27 +40,38 @@ AppAsset::register($this);
   ]);
 
   $guestNav = [
-    ['label' => 'About', 'url' => ['/site/about']],
-    ['label' => 'Contact', 'url' => ['/site/contact']],
-    ['label' => 'SignUp', 'url' => ['/site/sign-up']],
-    ['label' => 'Login', 'url' => ['/site/login']]
+    ['label' => yii::t('app', 'About'), 'url' => ['/site/about']],
+    ['label' => yii::t('app', 'Contact'), 'url' => ['/site/contact']],
+    ['label' => yii::t('app', 'SignUp'), 'url' => ['/site/sign-up']],
+    ['label' => yii::t('app', 'Login'), 'url' => ['/site/login']]
   ];
 
   $userNav = [
-    ['label' => 'Play', 'url' => ['/play/start']],
-    ['label' => 'Cards', 'url' => ['/card/index']],
-    ['label' => 'Packages', 'url' => ['/package/index']],
-    ['label' => 'About', 'url' => ['/site/about']],
-    ['label' => 'Contact', 'url' => ['/site/contact']],
+    ['label' => yii::t('app', 'Play'), 'url' => ['/play/start']],
+    ['label' => yii::t('app', 'Cards'), 'url' => ['/card/index']],
+    ['label' => yii::t('app', 'Packages'), 'url' => ['/package/index']],
+    ['label' => yii::t('app', 'About'), 'url' => ['/site/about']],
+    ['label' => yii::t('app', 'Contact'), 'url' => ['/site/contact']],
     '<li>'
     . Html::beginForm(['/site/logout'], 'post')
     . Html::submitButton(
-      'Logout (' . Yii::$app->user->identity->username . ')',
+      yii::t('app', 'Logout') . ' (' . Yii::$app->user->identity->username . ')',
       ['class' => 'btn btn-link logout']
     )
     . Html::endForm()
     . '</li>'
   ];
+
+  $langs = ArrayHelper::map([
+    [
+      'slug' => 'en',
+      'name' => 'English'
+    ],
+    [
+      'slug' => 'ru',
+      'name' => 'Russian'
+    ]
+  ], 'slug', 'name');
 
   echo Nav::widget([
     'options' => ['class' => 'navbar-nav navbar-right'],

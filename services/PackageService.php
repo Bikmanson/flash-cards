@@ -65,6 +65,7 @@ class PackageService
       'name' => Package::DEFAULT_PACKAGE_NAME
     ])) {
       $defaultPackage = new Package(['name' => Package::DEFAULT_PACKAGE_NAME]);
+      $defaultPackage->afterNewInstance();
       if (!$defaultPackage->save()) throw new Exception('Default package has not been created.');
     }
 

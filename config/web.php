@@ -7,11 +7,26 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
   'id' => 'basic',
+  'language' => 'ru',
   'basePath' => dirname(__DIR__),
   'bootstrap' => ['log'],
   'aliases' => [
     '@bower' => '@vendor/bower-asset',
     '@npm' => '@vendor/npm-asset',
+    '@modules' => dirname(__DIR__) . '/modules'
+  ],
+  'name' => yii::t('app', 'Flash Cards'),
+  'modules' => [
+    'lang' => [
+      'class' => modules\lang\Module::class,
+    ],
+    'i18n' => [
+      'translations' => [
+        '*' => [
+          'class' => 'yii\i18n\PhpMessageSource',
+        ],
+      ],
+    ],
   ],
   'components' => [
     'request' => [
@@ -88,6 +103,20 @@ if (YII_ENV_DEV) {
   $config['bootstrap'][] = 'gii';
   $config['modules']['gii'] = [
     'class' => 'yii\gii\Module',
+    'generators' => [
+      'langCrud' => [
+        'class' => '\modules\lang\gii\generators\langCrud\Generator',
+        'templates' => [
+          'default' => '@modules/lang/gii/generators/langCrud/default',
+        ]
+      ],
+      'langModel' => [
+        'class' => '\modules\lang\gii\generators\langModel\Generator',
+        'templates' => [
+          'default' => '@modules/lang/gii/generators/langModel/default',
+        ]
+      ],
+    ]
     // uncomment the following to add your IP if you are not connecting from localhost.
     //'allowedIPs' => ['127.0.0.1', '::1'],
   ];

@@ -20,6 +20,7 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "phpnt/animate-css": "^0.0.1",
         "wbraganca/yii2-dynamicform": "*",
+        "yii2tech/ar-variation": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

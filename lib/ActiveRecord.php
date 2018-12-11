@@ -1,19 +1,32 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Oleks
- * Date: 19.10.2018
- * Time: 11:23
- */
-
 namespace app\lib;
 
-
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 class ActiveRecord extends \yii\db\ActiveRecord
 {
+	public function behaviors() {
+		try { // ВНИМАНИЕ! КОСТЫЛЬ!
+			if( $this->hasAttribute('created_at') || $this->hasAttribute('updated_at') ) {
+				return ArrayHelper::merge(parent::behaviors(), [
+					TimestampBehavior::class,
+				]);
+			}
+		} catch (\Exception $ex) {}
+		return parent::behaviors();
+	}
+
+	public function getHiddenFormTokenField() {
+		$token = \Yii::$app->getSecurity()->generateRandomString();
+		$token = str_replace('+', '.', base64_encode($token));
+
+		\Yii::$app->session->set(\Yii::$app->params['form_token_param'], $token);;
+		return Html::hiddenInput(\Yii::$app->params['form_token_param'], $token);
+	}
+
   public static function createMultiple($modelClass, $multipleModels = [])
   {
     $model = new $modelClass;

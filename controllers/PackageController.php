@@ -67,6 +67,7 @@ class PackageController extends Controller
   public function actionCreate()
   {
     $model = new Package();
+    $model->afterNewInstance();
 
     if ($post = Yii::$app->request->post()) {
       if ($model->load($post) && $model->save()) {

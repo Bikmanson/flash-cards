@@ -74,10 +74,10 @@ class Card extends ActiveRecord
   public function attributeLabels()
   {
     return [
-      'question' => 'Question',
-      'answer' => 'Answer',
-      'creator_id' => 'Author',
-      'package_id' => 'Package'
+      'question' => yii::t('app', 'Question'),
+      'answer' => yii::t('app', 'Answer'),
+      'creator_id' => yii::t('app', 'Author'),
+      'package_id' => yii::t('app', 'Package')
     ];
   }
 

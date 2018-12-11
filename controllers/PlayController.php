@@ -17,6 +17,11 @@ use yii\helpers\Json;
 
 class PlayController extends Controller
 {
+  public function actionStart()
+  {
+    return $this->render('start');
+  }
+
   public function actionGo(bool $restart = false, bool $noCards = false)
   {
     if ($noCards) {
@@ -25,11 +30,6 @@ class PlayController extends Controller
     return $this->render('go', [
       'restart' => $restart
     ]);
-  }
-
-  public function actionStart()
-  {
-    return $this->render('start');
   }
 
   function actionNextCard(string $csIds = '', $currentCardId = null)
@@ -58,7 +58,7 @@ class PlayController extends Controller
       'question' => $question,
       'answer' => $answer,
       'currentCardId' => $nextCardId,
-      'packageIds' => $packageIds
+      'packageIds' => implode(',', $packageIds),
     ];
 
     return $this->renderAjax('card', [

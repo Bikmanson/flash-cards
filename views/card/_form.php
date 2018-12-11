@@ -54,7 +54,7 @@ use yii\widgets\ActiveForm;
             }
             ?>
 
-            <?= $form->field($card, "[{$index}]package_id")->dropDownList(PackageService::getMap()) ?>
+            <?= $form->field($card, "[{$index}]package_id")->dropDownList(PackageService::getMap(), ['prompt' => 'Packages...']) ?>
 
             <?= $form->field($card, "[{$index}]question")->textarea(['class' => 'b-cards__item-text', 'rows' => 5])
               ->label($card->getAttributeLabel('question'), ['class' => 'b-cards__item-label b-cards__item-label_question']) ?>
@@ -82,7 +82,7 @@ use yii\widgets\ActiveForm;
         }
       }
       ?>
-      <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+      <?= Html::submitButton(yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
 
   <?php ActiveForm::end(); ?>

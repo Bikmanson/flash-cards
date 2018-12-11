@@ -59,11 +59,11 @@ class PackageSearch extends Package
     }
 
     // grid filtering conditions
-    $query->andFilterWhere([
+//    $query->andFilterWhere([
 //      'id' => $this->id,
 //      'created_at' => $this->created_at,
 //      'updated_at' => $this->updated_at,
-    ]);
+//    ]);
 
     if($this->creator_id){
       $players = Player::find()->where(['like', 'username', $this->creator_id])->all();

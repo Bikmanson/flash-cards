@@ -10,12 +10,12 @@ $cardId = false;
 
 if($oneCard){
   $cardId = $cards[0]->id;
-  $this->title = 'Edit Card: ' . $cardId;
+  $this->title = yii::t('app', 'Edit Card').': ' . $cardId;
 } else {
-  $this->title = 'Edit Cards';
+  $this->title = yii::t('app', 'Edit Cards');
 }
 
-$this->params['breadcrumbs'][] = ['label' => 'Cards', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => yii::t('app', 'Cards'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

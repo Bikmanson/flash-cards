@@ -68,8 +68,8 @@ class Player extends ActiveRecord implements IdentityInterface
   public function attributeLabels()
   {
     return [
-      'id' => 'ID',
-      'username' => 'Username',
+      'id' => yii::t('app', 'ID'),
+      'username' => yii::t('app', 'Username'),
     ];
   }
 
