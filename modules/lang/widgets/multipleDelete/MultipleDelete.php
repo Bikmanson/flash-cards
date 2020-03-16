@@ -3,17 +3,12 @@
  *
  */
 namespace modules\lang\widgets\multipleDelete;
-use backend\widgets\langActiveForm\LangActiveForm;
-use Codeception\Exception\ConfigurationException;
-use common\lib\SmActiveRecord;
-use ReflectionFunction;
-use yii\base\Exception;
+
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\Html;
-use yii\helpers\Inflector;
 use yii\helpers\Url;
-use yii\widgets\ActiveForm;
+
 class MultipleDelete extends Widget
 {
     public $deleteConfirm = 'Вы уверены, что хотите удалить выбранные записи?';

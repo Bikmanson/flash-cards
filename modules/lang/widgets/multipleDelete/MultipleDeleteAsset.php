@@ -13,13 +13,13 @@ use yii\web\AssetBundle;
 
 class MultipleDeleteAsset extends AssetBundle
 {
-    public $sourcePath = '@backend/widgets/multipleDelete/assets';
+    public $sourcePath = '@modules/lang/widgets/multipleDelete/assets';
 
     public $js = [
         'multiple-delete.js',
     ];
 
     public $depends = [
-        'common\components\metronic\SweetAlertAsset',
+        'app\components\metronic\SweetAlertAsset',
     ];
 }

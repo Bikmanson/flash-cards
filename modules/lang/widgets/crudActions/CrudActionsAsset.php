@@ -14,7 +14,7 @@ use yii\web\AssetBundle;
 
 class CrudActionsAsset extends AssetBundle
 {
-    public $sourcePath = '@backend/widgets/crudActions/assets';
+    public $sourcePath = '@modules/lang/widgets/crudActions/assets';
 
     public $js = [
         'link-sweetalert.js',

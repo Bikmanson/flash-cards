@@ -6,7 +6,7 @@ use yii\web\View;
 
 class CoreAsset extends AssetBundle
 {
-	public $sourcePath = '@common/components/metronic/assets';
+	public $sourcePath = '@app/components/metronic/assets';
 	public $js = [
 		'https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js',
 		'vendors/base/vendors.bundle.js',

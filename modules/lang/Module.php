@@ -4,7 +4,7 @@ namespace modules\lang;
 
 use Yii;
 
-class Module extends \common\lib\Module
+class Module extends \app\lib\Module
 {
   public $controllerNamespace = 'app\modules\lang\backend\controllers';
 

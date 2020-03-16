@@ -1,3 +1,5 @@
+**ONLY FOR ADVANCED APP**
+
 Add module
 'lang' => [
   'class' => modules\lang\Module::class,
@@ -11,7 +13,7 @@ yii migrate --migrationPath=@modules/lang/migrations
 composer require add string
     "yii2tech/ar-variation": "^1.0"
 
-add component metronic
+add @common/components/metronic
 
 add to config local, in gii config array
     'generators' => [
@@ -38,3 +40,7 @@ generate lang models by gii
 generate lang crud by gii
 
 check models
+
+in view don't work
+    multipleDelete
+    langSwitcher

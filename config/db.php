@@ -2,7 +2,7 @@
 
 return [
   'class' => 'yii\db\Connection',
-  'dsn' => 'mysql:host=localhost;dbname=flash-cards',
+  'dsn' => 'mysql:host=localhost;dbname=flash-cards.std',
   'username' => 'root',
   'password' => '',
   'charset' => 'utf8',
